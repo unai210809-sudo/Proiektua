@@ -1,0 +1,751 @@
+<title>Forma bakarra</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Eskuz egindako alanbrezko bitxiaren sorkuntza-prozesua: ideia, diseinua, fabrikazioa eta azken pieza.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: kontrol editoriala. Hero irudi-eszena bat (testua ezkerrean, alanbrea eskuinean), ondoren sticky bi zutabe, banda horizontala, gau-eszena iluna eta amaiera argia. */
+:root{
+  --paper:#ebeae5; --paper-2:#dfddd5; --ink:#171613; --mute:#66635b;
+  --gold:#a37c22; --gold-hi:#dcb85f; --night:#0e0d0b; --night-ink:#ece8dc;
+  --line:rgba(23,22,19,.16); --line-night:rgba(236,232,220,.18);
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --sans:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --gut:clamp(16px,4.2vw,64px);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;font-weight:400;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img,video,svg{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+.wrap{padding-left:max(var(--gut),env(safe-area-inset-left,0px));padding-right:max(var(--gut),env(safe-area-inset-right,0px));width:100%}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:var(--paper);padding:8px 14px;z-index:100}
+.skip:focus{left:8px}
+.kick{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 18px}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;text-wrap:balance;letter-spacing:-.01em;line-height:.98}
+h2{font-size:clamp(40px,6vw,92px)}
+em{font-style:italic}
+
+/* NAV */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--paper)}
+.nav{position:fixed;left:0;right:0;top:0;z-index:50;padding-top:env(safe-area-inset-top,0px);background:rgba(235,234,229,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background .5s,color .5s,border-color .5s;border-bottom:1px solid var(--line)}
+.nav.dark{background:rgba(14,13,11,.78);color:var(--night-ink);border-color:var(--line-night)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:56px;gap:16px}
+.brand{font-family:var(--serif);font-size:22px;text-decoration:none;white-space:nowrap}
+.brand i{color:var(--gold)}
+.links{display:flex;gap:clamp(14px,2vw,28px);list-style:none;margin:0;padding:0}
+.links a{font-size:13px;letter-spacing:.04em;text-decoration:none;padding:6px 0;position:relative;opacity:.7;transition:opacity .3s}
+.links a:hover,.links a.act{opacity:1}
+.links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.links a.act::after{transform:scaleX(1)}
+.burger{display:none;background:none;border:1px solid currentColor;border-radius:99px;padding:6px 14px;font-size:13px;cursor:pointer}
+.prog{position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:left}
+@media(max-width:760px){
+  .burger{display:inline-block}
+  .links{position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:var(--paper);color:var(--ink);padding:8px max(var(--gut),env(safe-area-inset-left,0px)) 16px;border-bottom:1px solid var(--line);display:none}
+  .links.open{display:flex}
+  .links a{display:block;padding:14px 0;font-size:17px;opacity:1}
+}
+
+/* 1. HERO */
+.hero{min-height:100svh;display:flex;align-items:center;padding-top:calc(56px + env(safe-area-inset-top,0px));position:relative}
+.hero-in{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(16px,3vw,56px);align-items:center;padding-block:32px}
+.hero h1{font-size:clamp(46px,7.2vw,118px);line-height:.94}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.08em}
+.hero h1 .ln span{display:block}
+.hero h1 .gold{color:var(--gold);font-style:italic}
+.hero-sub{max-width:34ch;color:var(--mute);margin:28px 0 0;font-size:15px}
+.hint{margin-top:36px;display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.hint b{display:block;width:44px;height:1px;background:var(--mute);transform-origin:left;animation:hintline 2.4s ease-in-out infinite}
+@keyframes hintline{0%,100%{transform:scaleX(.2)}50%{transform:scaleX(1)}}
+.stage-h{position:relative;width:100%}
+.stage-h svg{width:100%;height:auto;overflow:visible}
+.wire{fill:none;stroke:var(--gold);stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
+.pencil{fill:none;stroke:#7b776c;stroke-width:1;opacity:.55;stroke-linecap:round}
+.guide{fill:none;stroke:var(--line);stroke-width:1;stroke-dasharray:3 6}
+#heroPhoto{opacity:0;filter:drop-shadow(0 18px 18px rgba(40,30,10,.28))}
+.hero-cap{position:absolute;left:0;bottom:-6px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.hero-cap span{transition:opacity .4s}
+.hero-cap .b{position:absolute;left:0;top:0;opacity:0;white-space:nowrap}
+@media(max-width:899px){
+  .hero{min-height:0;align-items:flex-start}
+  .hero-in{grid-template-columns:1fr;padding-block:28px 56px}
+  .hint{display:none}
+  .stage-h{margin-top:12px;padding-bottom:26px}
+}
+
+/* 2. IDEIA */
+.ideia{padding-block:clamp(72px,10vw,150px)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 56px;align-items:end;margin-bottom:clamp(40px,6vw,88px)}
+.sec-head>p{margin:0;color:var(--mute);max-width:46ch;justify-self:end}
+@media(max-width:760px){.sec-head{grid-template-columns:1fr}.sec-head>p{justify-self:start}}
+.split{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,5vw,90px);align-items:start}
+.pin-stage{position:sticky;top:calc(80px + env(safe-area-inset-top,0px))}
+.stage{position:relative;aspect-ratio:5/5.4;background:var(--paper);border:1px solid var(--line);overflow:hidden}
+.layer{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .8s ease,visibility .8s}
+.layer.on{opacity:1;visibility:visible}
+.layer img.cover{width:100%;height:100%;object-fit:cover;object-position:50% 62%}
+.layer svg{position:absolute;inset:0;width:100%;height:100%;padding:7%}
+.tag{position:absolute;left:14px;bottom:12px;right:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.chip{border:1px solid var(--line);background:rgba(235,234,229,.9);padding:3px 9px;border-radius:99px}
+.chip.g{color:var(--gold);border-color:var(--gold)}
+.w2{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round;transition:stroke-dashoffset 2.6s cubic-bezier(.5,0,.2,1)}
+.node{fill:var(--paper);stroke:var(--gold);stroke-width:1.4;opacity:0;transition:opacity .6s}
+.hdl{stroke:var(--gold);stroke-width:.8;opacity:0;transition:opacity .6s}
+.ctrl{fill:var(--gold);opacity:0;transition:opacity .6s}
+.layer.on .node,.layer.on .hdl,.layer.on .ctrl{opacity:1;transition-delay:1.6s}
+.dim{stroke:var(--mute);stroke-width:1;fill:none}
+.dimt{font-family:var(--mono);font-size:15px;fill:var(--mute);letter-spacing:.06em}
+.layer .ph{opacity:0;transition:opacity 1.4s .9s;filter:drop-shadow(0 10px 12px rgba(40,30,10,.25))}
+.layer.on .ph{opacity:1}
+.steps{display:flex;flex-direction:column;gap:clamp(160px,34vh,320px);padding-block:8vh 30vh}
+.step{opacity:.28;transition:opacity .5s}
+.step.on{opacity:1}
+.step .n{font-family:var(--mono);font-size:12px;color:var(--gold);letter-spacing:.14em}
+.step h3{font-size:clamp(30px,3.6vw,54px);margin:10px 0 16px}
+.step p{margin:0;color:var(--mute);max-width:40ch}
+.note{margin-top:clamp(40px,6vw,80px);padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--mute);max-width:70ch}
+@media(max-width:899px){
+  .split{grid-template-columns:1fr}
+  .pin-stage{top:calc(60px + env(safe-area-inset-top,0px));z-index:5;background:var(--paper-2);padding-bottom:10px}
+  .stage{aspect-ratio:auto;height:min(48svh,420px)}
+  .steps{gap:46svh;padding-block:6svh 36svh}
+  .step{background:transparent}
+}
+
+.why{margin-top:clamp(64px,9vw,130px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,90px);align-items:center;padding-top:clamp(40px,6vw,80px);border-top:1px solid var(--line)}
+.nest{position:relative;background:var(--paper);border:1px solid var(--line);aspect-ratio:1/.9;display:grid;place-items:center}
+.nest-in{position:relative;width:78%}
+.nest-in img{width:100%;height:auto;filter:drop-shadow(0 18px 16px rgba(40,30,10,.3))}
+.pt{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;border:1.5px solid var(--gold);background:var(--paper)}
+.pt span{position:absolute;top:50%;transform:translateY(-50%);left:26px;white-space:nowrap;font-family:var(--serif);font-style:italic;font-size:clamp(22px,2.4vw,32px);color:var(--ink)}
+.pt.l span{left:auto;right:26px}
+.why h3{font-size:clamp(34px,4.4vw,66px);margin-bottom:22px}
+.why p{margin:0 0 16px;max-width:46ch;font-size:17px;outline-offset:6px;cursor:text}
+.why .hint2{font-size:12.5px;color:var(--mute)}
+@media(max-width:899px){.why{grid-template-columns:1fr}}
+
+/* --- Berria: bezeroa, krokisak, garapena, ekoizpena --- */
+.bz{padding-block:clamp(72px,10vw,150px)}
+.bz-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,90px);align-items:start}
+.bz h2{font-size:clamp(52px,9vw,150px);line-height:.9}
+.bz h2 em{color:var(--gold)}
+.bz .lead{font-family:var(--serif);font-size:clamp(24px,2.6vw,38px);line-height:1.15;margin:24px 0 0;max-width:22ch}
+.bz-rows{display:grid;gap:0}
+.bz-row{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:8px 24px;padding:22px 0;border-top:1px solid var(--line)}
+.bz-row:last-child{border-bottom:1px solid var(--line)}
+.bz-row .k{font-family:var(--serif);font-size:clamp(26px,2.6vw,38px);line-height:1}
+.bz-row .k small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.bz-row p{margin:0;color:var(--mute);font-size:15px}
+.bz-row .to{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.bz-row .to span{border:1px solid var(--gold);color:var(--gold);padding:2px 10px;border-radius:99px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+@media(max-width:899px){.bz-in{grid-template-columns:1fr}.bz-row{grid-template-columns:1fr}}
+
+.kro{padding-block:clamp(72px,10vw,150px)}
+.kro-words{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,5vw,80px);align-items:center;margin-bottom:clamp(48px,7vw,100px)}
+.kro-words figure{margin:0}
+.kro-words img{width:100%;height:auto;border:1px solid var(--line);background:#fff}
+.cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin-top:10px}
+.kro-words p{margin:0 0 14px;max-width:46ch;color:var(--mute)}
+.kro-words p b{color:var(--ink);font-weight:500}
+.ideas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.4vw,36px)}
+.idea{display:grid;grid-template-rows:auto 1fr;gap:18px;align-content:start}
+.idea .im{aspect-ratio:1/1.05;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;position:relative}
+.idea .im img,.idea .im svg{width:100%;height:100%;object-fit:contain;padding:6%}
+.idea h3{font-size:clamp(30px,3vw,46px);margin:0 0 4px}
+.idea .l{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.idea p{margin:0 0 10px;color:var(--mute);font-size:15px}
+.idea p b{color:var(--ink);font-weight:500}
+.idea.win .im{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.badge{background:var(--gold);color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:2px 9px;border-radius:99px}
+.pick-h{margin:clamp(64px,9vw,130px) 0 28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 56px;align-items:end}
+.pick-h h3{font-size:clamp(34px,4.6vw,72px)}
+.pick-h>p{margin:0;color:var(--mute);max-width:46ch;justify-self:end}
+.pick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+.pick li{list-style:none;padding:22px 20px 22px 0;border-top:1px solid var(--ink);position:relative}
+.pick ol{display:contents}
+.pick .n{font-family:var(--mono);font-size:12px;color:var(--gold);letter-spacing:.12em}
+.pick h4{font-family:var(--serif);font-weight:400;font-size:clamp(24px,2.3vw,34px);margin:8px 0 10px;line-height:1.05}
+.pick p{margin:0;font-size:14.5px;color:var(--mute)}
+.tbl-w{overflow-x:auto;margin-top:clamp(36px,5vw,64px)}
+table.cmp{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+.cmp th,.cmp td{text-align:left;padding:14px 16px 14px 0;border-top:1px solid var(--line);vertical-align:top}
+.cmp thead th{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);border-top:0}
+.cmp th[scope=row]{font-family:var(--serif);font-weight:400;font-size:22px;white-space:nowrap}
+.cmp .y{color:var(--gold);font-weight:600}
+.cmp .m{color:var(--mute)}
+.cmp .no{color:#8a5a4a}
+.cmp .w{background:rgba(163,124,34,.08)}
+@media(max-width:899px){.kro-words,.pick-h{grid-template-columns:1fr}.pick-h>p{justify-self:start}.ideas{grid-template-columns:1fr}.pick{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.pick{grid-template-columns:1fr}}
+
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:0 0 clamp(36px,5vw,64px);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.chain span{border:1px solid var(--line);padding:6px 12px;border-radius:99px;background:var(--paper)}
+.chain span.g{border-color:var(--gold);color:var(--gold)}
+.chain i{font-style:normal;color:var(--gold)}
+.callout-stage{position:absolute;inset:0;display:grid;place-items:center}
+.stage .nest-in{width:74%}
+
+.mat{margin-top:clamp(48px,6vw,90px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,90px)}
+.mat h3{font-size:clamp(30px,3.4vw,52px);margin-bottom:18px}
+.mat ul{list-style:none;margin:0;padding:0}
+.mat li{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:4px 18px;padding:14px 0;border-top:1px solid var(--line);font-size:15px}
+.mat li b{font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.1}
+.mat li span{color:var(--mute)}
+@media(max-width:899px){.mat{grid-template-columns:1fr}.mat li{grid-template-columns:1fr}}
+.studio{margin-top:clamp(56px,8vw,120px)}
+.studio-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:28px}
+.studio-g .mac:first-child{grid-column:1/3;grid-row:1/3}
+.studio-g .mac .im{aspect-ratio:4/3}
+@media(max-width:899px){.studio-g{grid-template-columns:repeat(2,minmax(0,1fr))}.studio-g .mac:first-child{grid-column:1/-1;grid-row:auto}}
+.sub-h{font-family:var(--serif);font-size:clamp(30px,3.6vw,56px);margin:0;line-height:1}
+.sub-p{color:var(--mute);max-width:56ch;margin:14px 0 0;font-size:15px}
+
+
+/* --- Atzeko planoa eta mahaigaineko formatua --- */
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;--sp:0;
+ background:
+  radial-gradient(54vw 48vh at calc(10% + var(--sp)*58%) calc(6% + var(--sp)*74%),rgba(222,180,92,.34),rgba(222,180,92,0) 70%),
+  radial-gradient(66vw 58vh at calc(98% - var(--sp)*62%) calc(84% - var(--sp)*64%),rgba(132,158,172,.36),rgba(132,158,172,0) 70%),
+  linear-gradient(180deg,#f1f0eb 0%,#e8e6de 55%,#dddbd1 100%)}
+.bg::after{content:"";position:absolute;inset:0;opacity:.55;mix-blend-mode:multiply;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.bg-rings{position:absolute;right:-22vh;top:50%;width:104vh;height:104vh;margin-top:-52vh;opacity:.2;transform:rotate(calc(var(--sp)*160deg))}
+.bg-rings path{fill:none;stroke:var(--gold);stroke-width:1.1}
+.hero,.ideia,.kro,.proc,.bz,.end{position:relative}
+.rule{position:absolute;left:0;top:0;width:100%;height:1px;background:var(--gold);opacity:.7;transform-origin:left}
+.kro{background-color:rgba(206,204,194,.34);background-image:linear-gradient(rgba(23,22,19,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(23,22,19,.06) 1px,transparent 1px);background-size:44px 44px}
+.ideia{background-color:rgba(176,190,196,.26);background-image:linear-gradient(rgba(40,70,90,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(40,70,90,.07) 1px,transparent 1px),linear-gradient(rgba(40,70,90,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(40,70,90,.045) 1px,transparent 1px);background-size:132px 132px,132px 132px,22px 22px,22px 22px}
+.proc{background-image:radial-gradient(rgba(23,22,19,.16) 1px,transparent 1.5px);background-size:30px 30px}
+.stage,.nest{background:rgba(236,235,230,.78);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.wrap{max-width:1760px;margin-inline:auto}
+@media(min-width:1500px){body{font-size:17px}.sec-head>p,.step p,.idea p{font-size:17px}.step h3{font-size:clamp(34px,3.2vw,60px)}}
+@media(max-width:899px){.bg-rings{display:none}}
+@media(prefers-reduced-motion:reduce){.bg-rings{transform:none}}
+.rm .bg-rings{transform:none}
+
+.bz-text p{font-family:var(--serif);font-size:clamp(28px,3vw,48px);line-height:1.15;margin:0 0 .7em;max-width:24ch;text-wrap:balance}
+.bz-text{padding-top:clamp(0px,3vw,40px)}
+/* 3. PROZESUA */
+.proc{padding-block:clamp(72px,10vw,150px) clamp(48px,6vw,90px);position:relative}
+.strip-pin{position:relative;overflow:hidden}
+.track{display:flex;gap:clamp(28px,5vw,80px);padding:60px max(var(--gut),env(safe-area-inset-left,0px)) 80px;width:max-content;position:relative}
+.wire-line{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.wire-line path{fill:none;stroke:var(--gold);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linecap:round}
+.card{position:relative;z-index:1;width:clamp(230px,24vw,330px);flex:none}
+.card:nth-child(even){margin-top:80px}
+.vid{aspect-ratio:9/16;width:100%;background:var(--paper-2);overflow:hidden;position:relative;box-shadow:0 30px 50px -30px rgba(30,24,10,.45)}
+.vid video{width:100%;height:100%;object-fit:cover}
+.card figcaption{margin-top:14px;display:grid;gap:3px}
+.card .t{font-family:var(--serif);font-size:26px;line-height:1.05}
+.card .s{font-size:13px;color:var(--mute)}
+.card .f{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+@media(max-width:899px){
+  .strip-pin{overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+  .card{scroll-snap-align:center;width:min(70vw,300px)}
+  .card:nth-child(even){margin-top:40px}
+  .track{padding-top:30px}
+}
+.macros{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:clamp(40px,5vw,72px)}
+.mac{background:none;border:0;padding:0;cursor:zoom-in;text-align:left;display:grid;gap:8px;align-content:start}
+.mac .im{aspect-ratio:1;overflow:hidden;background:var(--paper-2)}
+.mac img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.6,.2,1)}
+.mac:hover img,.mac:focus-visible img{transform:scale(1.08)}
+.mac span{font-size:12.5px;color:var(--mute);line-height:1.35}
+.mac b{display:block;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+@media(max-width:899px){.macros{grid-template-columns:repeat(2,minmax(0,1fr))}.macros .mac:last-child{grid-column:1/-1}.macros .mac:last-child .im{aspect-ratio:2/1}}
+
+/* 4. PRODUKTUA */
+.night{background:var(--night);color:var(--night-ink);position:relative;overflow:hidden}
+.night .kick{color:var(--gold-hi)}
+.night-in{min-height:100svh;display:grid;align-items:center;padding-block:calc(70px + env(safe-area-inset-top,0px)) 40px;position:relative}
+.glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 50% 52%,rgba(214,170,80,.22),rgba(14,13,11,0) 70%);pointer-events:none}
+.prod{position:relative;width:min(92%,960px);margin-inline:auto;perspective:1200px}
+.prod-t{position:relative;transform-style:preserve-3d;transition:transform .25s ease-out}
+.prod img.d{width:100%;height:auto;filter:brightness(1.7) contrast(1.08) saturate(1.35) drop-shadow(0 40px 40px rgba(0,0,0,.65))}
+.shine{position:absolute;inset:0;-webkit-mask:url(img/usoa.png) center/100% 100% no-repeat;mask:url(img/usoa.png) center/100% 100% no-repeat;background:linear-gradient(105deg,rgba(255,244,214,0) 38%,rgba(255,244,214,.95) 50%,rgba(255,244,214,0) 62%) 0% 0%/280% 100% no-repeat;background-position:var(--sx,100%) 0;mix-blend-mode:screen;pointer-events:none}
+.hot{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:1px solid var(--gold-hi);background:rgba(14,13,11,.4);cursor:zoom-in;display:grid;place-items:center;color:var(--gold-hi);font-size:20px;line-height:1;padding:0}
+.hot::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--gold-hi);animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.9);opacity:0}}
+.hot span{position:absolute;left:54px;top:50%;transform:translateY(-50%);white-space:nowrap;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;pointer-events:none}
+.hot.r span{left:auto;right:54px}
+.say{position:absolute;font-family:var(--serif);font-style:italic;font-size:clamp(20px,2.6vw,38px);color:var(--night-ink);opacity:.9;max-width:12ch;line-height:1.05}
+.say.s1{left:0;top:6%}.say.s2{right:0;top:30%;text-align:right}.say.s3{left:3%;bottom:2%}
+.night-ring{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,6vw,100px);align-items:center;padding-block:clamp(40px,8vw,120px) clamp(72px,10vw,150px);position:relative}
+.night-ring img{width:min(100%,520px);margin-inline:auto;filter:brightness(1.12) contrast(1.05) drop-shadow(0 30px 30px rgba(0,0,0,.7))}
+.night-ring h2{font-size:clamp(36px,5vw,76px)}
+.night-ring p{color:rgba(236,232,220,.7);max-width:40ch;margin:20px 0 0}
+@media(max-width:899px){
+  .night-in{padding-top:calc(76px + env(safe-area-inset-top,0px));align-content:center}
+  .say{display:none}
+  .hot span{display:none}
+  .night-ring{grid-template-columns:1fr}
+}
+
+/* 5. AMAIERA */
+.end{padding-block:clamp(80px,11vw,170px)}
+.end-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,80px);align-items:center}
+.end-top .pic{position:relative;aspect-ratio:1/.9;display:grid;place-items:center;background:var(--paper-2)}
+.end-top .pic img{width:80%;filter:drop-shadow(0 22px 18px rgba(40,30,10,.3))}
+.quote{font-family:var(--serif);font-size:clamp(44px,6.6vw,108px);line-height:.95;text-wrap:balance}
+.quote i{color:var(--gold)}
+.info{margin-top:clamp(56px,8vw,120px);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(24px,5vw,80px)}
+.row{padding:20px 0 22px;border-top:1px solid var(--line);display:grid;gap:8px}
+.row dt{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.row dd{margin:0;font-family:var(--serif);font-size:clamp(24px,2.5vw,34px);line-height:1.15;min-height:1.2em;outline-offset:6px;cursor:text;overflow-wrap:anywhere}
+.row dd:empty::before{content:attr(data-ph);color:var(--gold);opacity:.75;border-bottom:1px dashed var(--gold)}
+.row .obs{font-size:13px;color:var(--mute)}
+.edit-note{grid-column:1/-1;font-size:13px;color:var(--mute);margin:0 0 24px}
+@media(max-width:760px){.end-top,.info{grid-template-columns:1fr}}
+footer{border-top:1px solid var(--line);padding-block:26px calc(30px + env(safe-area-inset-bottom,0px))}
+.foot{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;font-size:13px;color:var(--mute)}
+.mot{background:none;border:1px solid var(--line);border-radius:99px;padding:7px 16px;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.mot[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
+
+/* ZOOM */
+.zoom{position:fixed;inset:0;z-index:90;background:rgba(10,9,7,.94);display:grid;grid-template-rows:auto minmax(0,1fr) auto;color:var(--night-ink)}
+.zoom[hidden]{display:none}
+.zbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:max(12px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-left,0px)) 12px}
+.zbar p{margin:0;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.zbtns{display:flex;gap:8px}
+.zbtns button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line-night);background:none;cursor:pointer;font-size:20px;color:var(--night-ink)}
+.zview{overflow:hidden;touch-action:none;cursor:grab;position:relative}
+.zview:active{cursor:grabbing}
+.zview img{position:absolute;left:50%;top:50%;max-width:none;width:min(92vw,86svh);height:auto;transform-origin:center;user-select:none;-webkit-user-drag:none}
+.zcap{padding:12px max(16px,env(safe-area-inset-left,0px)) calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;opacity:.75;text-align:center}
+
+@media(prefers-reduced-motion:reduce){
+  .hint b,.hot::after{animation:none}
+  *{transition-duration:.01s!important;transition-delay:0s!important}
+}
+.rm .hint b,.rm .hot::after{animation:none}
+.rm *{transition-duration:.01s!important;transition-delay:0s!important}
+</style>
+
+<a class="skip" href="#hasiera">Edukira joan</a>
+<div class="bg" id="bg" aria-hidden="true"><svg class="bg-rings" viewBox="-320 -320 640 640"><path d="M14.0 0.0 L14.6 0.5 L15.2 1.1 L15.8 1.7 L16.4 2.4 L16.9 3.1 L17.3 3.8 L17.8 4.6 L18.2 5.4 L18.5 6.3 L18.8 7.1 L19.0 8.0 L19.2 8.9 L19.3 9.9 L19.3 10.8 L19.3 11.7 L19.3 12.7 L19.1 13.6 L18.9 14.5 L18.7 15.4 L18.4 16.3 L18.0 17.2 L17.6 18.1 L17.1 18.9 L16.6 19.8 L16.0 20.5 L15.4 21.3 L14.7 22.0 L14.0 22.7 L13.3 23.3 L12.5 24.0 L11.7 24.5 L10.8 25.1 L10.0 25.6 L9.1 26.0 L8.1 26.4 L7.2 26.8 L6.2 27.2 L5.3 27.5 L4.3 27.7 L3.3 28.0 L2.3 28.2 L1.3 28.4 L0.2 28.5 L-0.8 28.7 L-1.9 28.8 L-2.9 28.8 L-4.0 28.9 L-5.1 28.9 L-6.2 28.9 L-7.3 28.9 L-8.4 28.8 L-9.5 28.8 L-10.6 28.7 L-11.8 28.5 L-13.0 28.4 L-14.1 28.2 L-15.3 28.0 L-16.5 27.8 L-17.8 27.5 L-19.0 27.2 L-20.3 26.9 L-21.5 26.5 L-22.8 26.1 L-24.1 25.6 L-25.4 25.1 L-26.7 24.5 L-28.0 23.9 L-29.3 23.2 L-30.6 22.5 L-31.9 21.7 L-33.2 20.9 L-34.5 20.0 L-35.7 19.0 L-37.0 18.0 L-38.2 16.9 L-39.4 15.7 L-40.5 14.5 L-41.6 13.2 L-42.7 11.8 L-43.7 10.4 L-44.6 8.9 L-45.5 7.4 L-46.4 5.8 L-47.1 4.2 L-47.8 2.5 L-48.4 0.8 L-48.9 -1.0 L-49.4 -2.8 L-49.7 -4.6 L-50.0 -6.5 L-50.1 -8.4 L-50.2 -10.3 L-50.2 -12.2 L-50.1 -14.1 L-49.9 -16.0 L-49.6 -18.0 L-49.2 -19.9 L-48.7 -21.8 L-48.1 -23.6 L-47.5 -25.5 L-46.7 -27.3 L-45.9 -29.1 L-44.9 -30.9 L-43.9 -32.6 L-42.8 -34.3 L-41.7 -35.9 L-40.5 -37.5 L-39.2 -39.0 L-37.8 -40.5 L-36.4 -41.9 L-34.9 -43.3 L-33.4 -44.6 L-31.8 -45.9 L-30.1 -47.1 L-28.5 -48.3 L-26.7 -49.4 L-25.0 -50.4 L-23.2 -51.4 L-21.4 -52.3 L-19.5 -53.2 L-17.6 -54.0 L-15.7 -54.8 L-13.7 -55.5 L-11.7 -56.2 L-9.7 -56.8 L-7.7 -57.3 L-5.6 -57.8 L-3.5 -58.3 L-1.4 -58.7 L0.7 -59.0 L2.9 -59.3 L5.1 -59.5 L7.3 -59.7 L9.5 -59.8 L11.8 -59.8 L14.0 -59.8 L16.3 -59.7 L18.6 -59.6 L20.9 -59.3 L23.3 -59.0 L25.6 -58.7 L28.0 -58.2 L30.4 -57.7 L32.7 -57.0 L35.1 -56.3 L37.5 -55.5 L39.8 -54.6 L42.2 -53.6 L44.5 -52.6 L46.8 -51.4 L49.1 -50.1 L51.4 -48.7 L53.6 -47.2 L55.7 -45.7 L57.9 -44.0 L59.9 -42.2 L61.9 -40.3 L63.8 -38.4 L65.7 -36.3 L67.5 -34.1 L69.2 -31.9 L70.8 -29.6 L72.3 -27.1 L73.7 -24.7 L75.0 -22.1 L76.2 -19.5 L77.3 -16.8 L78.2 -14.0 L79.1 -11.2 L79.8 -8.4 L80.4 -5.5 L80.8 -2.6 L81.2 0.3 L81.4 3.3 L81.5 6.3 L81.4 9.3 L81.2 12.2 L80.9 15.2 L80.5 18.2 L79.9 21.1 L79.3 24.1 L78.5 27.0 L77.6 29.9 L76.5 32.7 L75.4 35.5 L74.2 38.3 L72.8 41.0 L71.4 43.7 L69.8 46.3 L68.2 48.9 L66.4 51.4 L64.6 53.8 L62.7 56.2 L60.7 58.6 L58.6 60.8 L56.5 63.0 L54.3 65.2 L52.0 67.3 L49.6 69.3 L47.2 71.2 L44.7 73.1 L42.1 74.9 L39.5 76.6 L36.8 78.3 L34.1 79.8 L31.3 81.4 L28.4 82.8 L25.5 84.1 L22.6 85.4 L19.5 86.6 L16.5 87.7 L13.3 88.7 L10.2 89.6 L6.9 90.4 L3.7 91.2 L0.4 91.8 L-3.0 92.3 L-6.4 92.7 L-9.8 93.0 L-13.3 93.2 L-16.8 93.3 L-20.3 93.2 L-23.8 93.0 L-27.3 92.7 L-30.9 92.2 L-34.5 91.6 L-38.0 90.9 L-41.6 90.1 L-45.1 89.1 L-48.6 87.9 L-52.1 86.6 L-55.5 85.2 L-58.9 83.6 L-62.3 81.8 L-65.6 80.0 L-68.8 77.9 L-71.9 75.8 L-75.0 73.5 L-78.0 71.0 L-80.9 68.5 L-83.7 65.8 L-86.4 62.9 L-88.9 60.0 L-91.4 56.9 L-93.7 53.7 L-95.9 50.5 L-98.0 47.1 L-99.9 43.6 L-101.7 40.1 L-103.3 36.4 L-104.8 32.7 L-106.1 28.9 L-107.3 25.1 L-108.3 21.2 L-109.2 17.3 L-109.9 13.4 L-110.4 9.4 L-110.8 5.3 L-111.1 1.3 L-111.2 -2.7 L-111.1 -6.8 L-110.9 -10.8 L-110.5 -14.8 L-110.0 -18.9 L-109.4 -22.9 L-108.6 -26.9 L-107.6 -30.8 L-106.5 -34.7 L-105.3 -38.6 L-104.0 -42.5 L-102.5 -46.3 L-100.9 -50.1 L-99.2 -53.8 L-97.3 -57.5 L-95.4 -61.1 L-93.3 -64.6 L-91.1 -68.1 L-88.8 -71.6 L-86.3 -74.9 L-83.8 -78.3 L-81.1 -81.5 L-78.3 -84.6 L-75.5 -87.7 L-72.5 -90.7 L-69.4 -93.6 L-66.2 -96.5 L-62.9 -99.2 L-59.5 -101.9 L-56.0 -104.4 L-52.4 -106.9 L-48.7 -109.2 L-44.9 -111.4 L-41.0 -113.5 L-37.1 -115.5 L-33.0 -117.3 L-28.9 -119.1 L-24.7 -120.6 L-20.4 -122.1 L-16.0 -123.4 L-11.6 -124.5 L-7.1 -125.5 L-2.5 -126.3 L2.1 -126.9 L6.7 -127.4 L11.4 -127.7 L16.1 -127.8 L20.8 -127.7 L25.6 -127.5 L30.3 -127.0 L35.1 -126.4 L39.8 -125.6 L44.5 -124.5 L49.2 -123.3 L53.9 -121.9 L58.5 -120.3 L63.0 -118.5 L67.5 -116.5 L71.9 -114.3 L76.2 -112.0 L80.5 -109.4 L84.6 -106.7 L88.7 -103.8 L92.6 -100.7 L96.4 -97.5 L100.0 -94.1 L103.6 -90.6 L107.0 -86.9 L110.2 -83.1 L113.3 -79.1 L116.3 -75.0 L119.0 -70.8 L121.7 -66.5 L124.1 -62.1 L126.4 -57.6 L128.5 -53.0 L130.5 -48.4 L132.2 -43.6 L133.8 -38.8 L135.3 -34.0 L136.5 -29.1 L137.6 -24.1 L138.5 -19.1 L139.2 -14.1 L139.8 -9.0 L140.1 -3.9 L140.3 1.2 L140.4 6.3 L140.2 11.4 L139.9 16.5 L139.4 21.6 L138.8 26.7 L138.0 31.8 L137.0 36.8 L135.8 41.9 L134.5 46.9 L133.0 51.9 L131.4 56.8 L129.6 61.7 L127.6 66.6 L125.5 71.4 L123.2 76.1 L120.7 80.8 L118.1 85.4 L115.3 90.0 L112.4 94.4 L109.3 98.8 L106.0 103.1 L102.6 107.3 L99.0 111.4 L95.3 115.4 L91.4 119.3 L87.4 123.0 L83.2 126.6 L78.9 130.1 L74.4 133.5 L69.8 136.6 L65.0 139.7 L60.2 142.5 L55.2 145.2 L50.1 147.7 L44.8 150.0 L39.5 152.1 L34.1 154.1 L28.6 155.8 L23.0 157.3 L17.3 158.6 L11.6 159.6 L5.8 160.4 L-0.1 161.1 L-5.9 161.4 L-11.8 161.6 L-17.7 161.5 L-23.6 161.1 L-29.6 160.6 L-35.5 159.7 L-41.3 158.7 L-47.2 157.4 L-52.9 155.9 L-58.7 154.1 L-64.3 152.1 L-69.9 149.9 L-75.4 147.5 L-80.8 144.8 L-86.1 141.9 L-91.3 138.9 L-96.4 135.6 L-101.4 132.1 L-106.2 128.4 L-110.9 124.6 L-115.4 120.6 L-119.8 116.4 L-124.0 112.0 L-128.1 107.5 L-132.0 102.8 L-135.7 98.0 L-139.3 93.1 L-142.7 88.0 L-145.9 82.8 L-148.9 77.5 L-151.7 72.1 L-154.4 66.6 L-156.9 61.0 L-159.2 55.4 L-161.2 49.6 L-163.1 43.8 L-164.8 37.9 L-166.4 31.9 L-167.7 25.9 L-168.8 19.8 L-169.7 13.7 L-170.4 7.5 L-170.9 1.3 L-171.3 -4.9 L-171.4 -11.2 L-171.3 -17.4 L-171.0 -23.7 L-170.4 -30.0 L-169.7 -36.2 L-168.8 -42.5 L-167.6 -48.8 L-166.2 -55.0 L-164.7 -61.2 L-162.9 -67.3 L-160.8 -73.5 L-158.6 -79.5 L-156.1 -85.5 L-153.5 -91.5 L-150.6 -97.3 L-147.4 -103.1 L-144.1 -108.8 L-140.6 -114.3 L-136.8 -119.8 L-132.8 -125.1 L-128.6 -130.3 L-124.2 -135.3 L-119.6 -140.2 L-114.8 -145.0 L-109.8 -149.5 L-104.7 -153.9 L-99.3 -158.1 L-93.8 -162.1 L-88.1 -165.9 L-82.2 -169.4 L-76.2 -172.8 L-70.1 -175.9 L-63.8 -178.7 L-57.4 -181.4 L-50.9 -183.7 L-44.3 -185.9 L-37.6 -187.7 L-30.8 -189.3 L-23.9 -190.6 L-17.0 -191.7 L-10.0 -192.5 L-3.0 -193.0 L4.0 -193.2 L11.0 -193.1 L18.0 -192.8 L25.1 -192.2 L32.1 -191.4 L39.0 -190.2 L45.9 -188.8 L52.8 -187.2 L59.6 -185.3 L66.4 -183.1 L73.0 -180.7 L79.6 -178.0 L86.0 -175.1 L92.4 -171.9 L98.6 -168.5 L104.7 -164.9 L110.7 -161.1 L116.6 -157.1 L122.3 -152.8 L127.8 -148.4 L133.2 -143.8 L138.5 -138.9 L143.6 -133.9 L148.5 -128.7 L153.2 -123.4 L157.8 -117.9 L162.2 -112.2 L166.4 -106.4 L170.4 -100.4 L174.2 -94.3 L177.8 -88.1 L181.2 -81.7 L184.4 -75.2 L187.4 -68.6 L190.1 -61.8 L192.7 -55.0 L195.0 -48.1 L197.1 -41.1 L198.9 -34.0 L200.6 -26.8 L201.9 -19.5 L203.1 -12.2 L203.9 -4.8 L204.6 2.6 L204.9 10.0 L205.0 17.5 L204.9 25.0 L204.5 32.6 L203.8 40.1 L202.8 47.6 L201.5 55.1 L200.0 62.6 L198.2 70.0 L196.1 77.4 L193.8 84.8 L191.1 92.0 L188.2 99.2 L185.0 106.2 L181.5 113.2 L177.7 120.1 L173.7 126.8 L169.4 133.3 L164.9 139.7 L160.0 146.0 L155.0 152.0 L149.7 157.9 L144.1 163.6 L138.4 169.0 L132.4 174.3 L126.2 179.3 L119.8 184.0 L113.2 188.6 L106.4 192.8 L99.5 196.8 L92.4 200.6 L85.1 204.0 L77.7 207.2 L70.2 210.1 L62.6 212.7 L54.9 215.0 L47.1 217.0 L39.2 218.7 L31.2 220.1 L23.2 221.2 L15.2 222.1 L7.1 222.6 L-1.0 222.8 L-9.1 222.7 L-17.2 222.3 L-25.3 221.7 L-33.3 220.7 L-41.4 219.5 L-49.3 217.9 L-57.2 216.1 L-65.1 214.0 L-72.9 211.7 L-80.6 209.0 L-88.2 206.1 L-95.7 202.9 L-103.1 199.5 L-110.4 195.8 L-117.6 191.9 L-124.6 187.7 L-131.5 183.3 L-138.3 178.6 L-144.9 173.7 L-151.3 168.6 L-157.6 163.3 L-163.7 157.7 L-169.6 151.9 L-175.4 145.9 L-180.9 139.8 L-186.3 133.4 L-191.4 126.8 L-196.3 120.0 L-201.0 113.1 L-205.5 105.9 L-209.7 98.6 L-213.7 91.2 L-217.4 83.6 L-220.9 75.8 L-224.1 67.9 L-227.0 59.9 L-229.7 51.7 L-232.0 43.5 L-234.1 35.1 L-235.8 26.7 L-237.3 18.1 L-238.4 9.5 L-239.2 0.8 L-239.7 -7.9 L-239.9 -16.6 L-239.7 -25.4 L-239.2 -34.2 L-238.4 -42.9 L-237.2 -51.7 L-235.7 -60.4 L-233.9 -69.1 L-231.7 -77.7 L-229.2 -86.3 L-226.3 -94.7 L-223.2 -103.1 L-219.7 -111.3 L-215.8 -119.4 L-211.7 -127.4 L-207.2 -135.2 L-202.4 -142.8 L-197.4 -150.3 L-192.0 -157.5 L-186.4 -164.6 L-180.4 -171.4 L-174.3 -178.0 L-167.8 -184.4 L-161.1 -190.5 L-154.2 -196.4 L-147.1 -202.0 L-139.7 -207.3 L-132.2 -212.4 L-124.4 -217.2 L-116.5 -221.7 L-108.4 -225.9 L-100.2 -229.7 L-91.8 -233.3 L-83.3 -236.6 L-74.7 -239.6 L-66.0 -242.2 L-57.2 -244.6 L-48.3 -246.6 L-39.3 -248.3 L-30.3 -249.7 L-21.2 -250.8 L-12.1 -251.6 L-2.9 -252.0 L6.3 -252.1 L15.4 -251.9 L24.6 -251.4 L33.7 -250.6 L42.9 -249.5 L52.0 -248.0 L61.0 -246.2 L70.0 -244.2 L78.9 -241.8 L87.8 -239.1 L96.6 -236.1 L105.3 -232.8 L113.8 -229.2 L122.3 -225.4 L130.7 -221.2 L138.9 -216.7 L147.0 -211.9 L154.9 -206.9 L162.6 -201.5 L170.2 -195.9 L177.6 -190.0 L184.8 -183.9 L191.8 -177.4 L198.6 -170.8 L205.2 -163.8 L211.5 -156.6 L217.6 -149.2 L223.4 -141.5 L228.9 -133.6 L234.2 -125.5 L239.2 -117.2 L243.9 -108.7 L248.2 -100.0 L252.3 -91.1 L256.0 -82.1 L259.4 -72.9 L262.4 -63.6 L265.1 -54.1 L267.5 -44.5 L269.4 -34.8 L271.0 -25.1 L272.2 -15.2 L273.1 -5.3 L273.6 4.6 L273.7 14.5 L273.4 24.5 L272.7 34.5 L271.6 44.4 L270.1 54.3 L268.3 64.2 L266.1 74.0 L263.5 83.7 L260.5 93.3 L257.2 102.8 L253.5 112.1 L249.4 121.4 L245.0 130.4 L240.2 139.3 L235.1 148.1 L229.7 156.6 L224.0 164.9 L217.9 173.0 L211.6 180.9 L205.0 188.5 L198.1 195.9 L190.9 203.1 L183.4 210.0 L175.8 216.6 L167.8 222.9 L159.7 228.9 L151.3 234.7 L142.8 240.1 L134.0 245.3 L125.1 250.1 L116.0 254.7 L106.7 258.9 L97.3 262.8 L87.8 266.4 L78.1 269.6 L68.3 272.5 L58.4 275.1 L48.5 277.3 L38.4 279.2 L28.3 280.7 L18.1 281.9 L7.8 282.8 L-2.5 283.3 L-12.8 283.5 L-23.1 283.3 L-33.4 282.7 L-43.8 281.8 L-54.1 280.5 L-64.4 278.9 L-74.6 276.9 L-84.8 274.5 L-94.9 271.8 L-104.9 268.7 L-114.8 265.3 L-124.7 261.5 L-134.4 257.3 L-143.9 252.8 L-153.4 248.0 L-162.6 242.8 L-171.7 237.2 L-180.6 231.3 L-189.3 225.1 L-197.8 218.5 L-206.0 211.7 L-214.0 204.5 L-221.8 196.9 L-229.2 189.1 L-236.4 181.0 L-243.3 172.7 L-249.9 164.0 L-256.1 155.1 L-262.1 145.9 L-267.6 136.5 L-272.9 126.9 L-277.7 117.1 L-282.2 107.1 L-286.3 96.9 L-290.0 86.6 L-293.3 76.1 L-296.2 65.4 L-298.7 54.7 L-300.8 43.8 L-302.5 32.9 L-303.7 21.9 L-304.6 10.9 L-305.0 -0.2 L-305.0 -11.3 L-304.6 -22.4 L-303.7 -33.5 L-302.5 -44.5 L-300.8 -55.5 L-298.7 -66.4 L-296.2 -77.2 L-293.3 -88.0 L-290.0 -98.6 L-286.4 -109.1 L-282.3 -119.5 L-277.9 -129.7 L-273.1 -139.8 L-267.9 -149.7 L-262.4 -159.4 L-256.5 -168.9 L-250.3 -178.1 L-243.8 -187.2 L-236.9 -196.0 L-229.8 -204.6 L-222.3 -213.0 L-214.6 -221.0 L-206.5 -228.8 L-198.2 -236.4 L-189.7 -243.6 L-180.9 -250.6 L-171.8 -257.2 L-162.5 -263.6 L-153.0 -269.6 L-143.2 -275.3 L-133.3 -280.7 L-123.2 -285.7 L-112.9 -290.4 L-102.4 -294.7 L-91.8 -298.7 L-81.0 -302.3 L-70.1 -305.5 L-59.0 -308.4 L-47.8 -310.9 L-36.6 -312.9 L-25.2 -314.6 L-13.8 -315.9 L-2.3 -316.8 L9.2 -317.3 L20.8 -317.4 L32.4 -317.1 L43.9 -316.3 L55.5 -315.1 L67.1 -313.5 L78.6 -311.5 L90.0 -309.0 L101.4 -306.2 L112.7 -302.9 L123.8 -299.1 L134.9 -295.0 L145.8 -290.4 L156.5 -285.5 L167.1 -280.1 L177.4 -274.3 L187.6 -268.1 L197.5 -261.5 L207.2 -254.6 L216.6 -247.2 L225.8 -239.5 L234.7 -231.5 L243.2 -223.1 L251.5 -214.4 L259.4 -205.3 L267.0 -196.0 L274.2 -186.3 L281.0 -176.4 L287.5 -166.2 L293.6 -155.8 L299.3 -145.1 L304.5 -134.2 L309.4 -123.2 L313.9 -111.9 L317.9 -100.5 L321.5 -88.9 L324.6 -77.2 L327.4 -65.4 L329.7 -53.5 L331.5 -41.5 L332.9 -29.4 L333.8 -17.3 L334.4 -5.1 L334.4 7.0 L334.1 19.2 L333.2 31.3 L332.0 43.4 L330.3 55.5 L328.2 67.4 L325.7 79.4 L322.7 91.2 L319.4 102.9 L315.6 114.5 L311.4 126.0 L306.8 137.3 L301.8 148.4 L296.4 159.4 L290.7 170.2 L284.5 180.8 L278.0 191.2 L271.2 201.4 L263.9 211.3 L256.4 221.0 L248.5 230.5 L240.2 239.6 L231.7 248.5 L222.8 257.1 L213.6 265.4 L204.1 273.4 L194.3 281.1 L184.3 288.4 L174.0 295.4 L163.4 302.1 L152.6 308.3 L141.5 314.2 L130.2 319.7 L118.8 324.8 L107.1 329.5"/></svg></div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#hasiera" data-go="hasiera" aria-label="Hasiera: Itsasoa eta Urrea">Itsasoa <i>+</i> Urrea</a>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="links">Menua</button>
+    <ul class="links" id="links">
+      <li><a href="#hasiera" data-go="hasiera">Hasiera</a></li>
+      <li><a href="#bezeroa" data-go="bezeroa">Bezeroa</a></li>
+      <li><a href="#krokisak" data-go="krokisak">Krokisak</a></li>
+      <li><a href="#garapena" data-go="garapena">Garapena</a></li>
+      <li><a href="#ekoizpena" data-go="ekoizpena">Ekoizpena</a></li>
+      <li><a href="#informazioa" data-go="informazioa">Informazioa</a></li>
+    </ul>
+  </div>
+  <div class="prog" id="prog"></div>
+</header>
+
+<main>
+<!-- 1 -->
+<section class="hero" id="hasiera" aria-labelledby="h1">
+  <div class="wrap hero-in">
+    <div>
+      <p class="kick">Eskuz egindako alanbrea</p>
+      <h1 id="h1"><span class="ln"><span>Ideia bat.</span></span><span class="ln"><span>Material bat.</span></span><span class="ln"><span class="gold">Forma bakarra.</span></span></h1>
+      <p class="hero-sub">Habia baten ideiatik, eskuz bihurtutako bi alanbrezko pieza sortu ziren: usoa eta eraztuna.</p>
+      <div class="hint"><b></b>Egin behera</div>
+    </div>
+    <div class="stage-h" id="heroStage">
+      <svg id="heroSvg" viewBox="0 0 881 725" role="img" aria-label="Alanbrezko usoaren siluetaren marrazkia, lerro fin gisa marraztuz doana eta azkenean benetako piezaren argazkira igarotzen dena">
+        <ellipse class="guide" cx="440" cy="370" rx="400" ry="320"/>
+        <line class="guide" x1="20" y1="372" x2="860" y2="372"/>
+        <line class="guide" x1="440" y1="20" x2="440" y2="705"/>
+        <g id="pencils"></g>
+        <image id="heroPhoto" href="img/usoa.png" x="0" y="0" width="881" height="725"/>
+        <path id="wire" class="wire" d="M847.3 334.4C845.9 332.6 843.9 329.9 840.0 328.9C836.1 327.9 831.7 327.0 824.0 328.2C816.3 329.5 813.7 333.7 794.0 336.4C774.3 339.0 727.0 341.5 706.0 344.1C685.0 346.6 685.7 349.3 668.0 351.9C650.3 354.5 616.3 358.7 600.0 359.5C583.7 360.3 576.8 357.9 570.0 356.7C563.2 355.6 562.3 354.3 559.0 352.6C555.7 351.0 553.1 349.7 550.0 346.9C546.9 344.1 542.5 339.6 540.4 336.0C538.3 332.4 535.5 336.8 537.4 325.0C539.2 313.2 548.1 284.2 551.2 265.0C554.3 245.8 555.2 228.0 556.0 210.0C556.8 192.0 555.2 172.7 556.0 157.0C556.8 141.3 560.4 124.0 560.5 116.0C560.7 108.0 558.8 110.4 557.1 108.8C555.3 107.3 560.0 103.8 550.0 106.7C540.0 109.6 513.8 119.4 497.0 126.1C480.2 132.7 463.8 138.9 449.0 146.4C434.2 153.9 419.7 162.3 408.0 170.9C396.3 179.5 389.9 186.5 379.0 198.0C368.1 209.5 352.3 227.7 342.8 240.0C333.4 252.3 329.0 258.3 322.4 272.0C315.7 285.7 307.7 306.0 303.2 322.0C298.7 338.0 297.3 359.2 295.4 368.0C293.5 376.8 293.2 372.9 291.8 374.6C290.4 376.4 289.6 377.6 286.9 378.5C284.3 379.5 279.5 381.1 276.0 380.3C272.5 379.5 268.9 377.1 265.9 373.9C262.9 370.7 261.6 369.0 257.9 361.0C254.1 353.0 247.5 334.0 243.3 326.0C239.1 318.0 236.3 316.6 232.9 313.0C229.6 309.4 228.5 307.5 223.0 304.6C217.5 301.7 210.2 297.5 200.0 295.6C189.8 293.6 172.5 292.7 162.0 293.0C151.5 293.3 144.3 294.6 137.0 297.2C129.7 299.9 128.5 297.5 118.2 308.8C108.0 320.1 83.9 354.4 75.4 365.0C66.8 375.6 71.1 369.8 67.0 372.6C62.9 375.5 54.2 379.2 50.9 382.3C47.7 385.4 47.1 388.3 47.5 391.0C47.9 393.7 49.0 396.3 53.2 398.7C57.5 401.1 66.4 402.6 73.0 405.5C79.6 408.4 86.7 412.1 93.0 416.2C99.3 420.3 106.5 426.3 111.0 430.2C115.5 434.2 117.1 436.0 119.9 440.0C122.8 444.0 125.4 447.2 128.0 454.0C130.6 460.8 132.9 473.3 135.5 481.0C138.0 488.7 137.8 489.8 143.5 500.0C149.1 510.2 159.7 525.5 169.2 542.0C178.8 558.5 192.0 585.2 200.6 599.0C209.1 612.8 213.5 617.4 220.6 625.0C227.7 632.6 236.9 640.0 243.0 644.6C249.1 649.3 251.2 650.0 257.0 652.8C262.8 655.6 266.2 658.0 278.0 661.4C289.8 664.8 304.7 669.5 328.0 673.2C351.3 677.0 392.7 680.6 418.0 684.1C443.3 687.5 465.8 692.2 480.0 693.8C494.2 695.3 496.0 694.1 503.0 693.5C510.0 693.0 513.2 692.5 522.0 690.4C530.8 688.4 546.0 683.0 556.0 681.3C566.0 679.6 576.5 680.8 582.0 680.1C587.5 679.3 587.2 677.9 588.7 676.6C590.3 675.2 590.9 673.5 591.3 671.9C591.7 670.3 593.6 671.3 591.1 667.0C588.5 662.7 578.6 650.3 575.8 646.0C573.0 641.7 574.4 643.0 574.3 641.0C574.2 639.0 574.5 636.0 575.2 634.1C576.0 632.1 577.4 630.5 578.8 629.3C580.3 628.1 578.8 627.4 584.0 626.6C589.2 625.9 604.7 625.9 609.8 624.8C614.8 623.8 613.3 622.1 614.3 620.5C615.2 618.8 616.1 617.6 615.5 615.0C614.9 612.4 617.0 613.3 610.6 605.0C604.1 596.7 582.7 573.3 576.7 565.0C570.7 556.7 574.3 558.1 574.5 555.0C574.8 551.9 576.7 548.7 578.4 546.4C580.0 544.0 581.9 542.5 584.2 541.1C586.5 539.6 584.2 538.5 592.0 537.5C599.8 536.5 617.7 537.4 631.0 535.1C644.3 532.8 655.8 529.4 672.0 523.6C688.2 517.8 715.3 506.2 728.0 500.2C740.7 494.2 736.8 496.4 748.0 487.6C759.2 478.9 785.0 456.8 795.0 447.9C805.0 438.9 803.2 441.0 807.8 434.0C812.4 427.0 818.4 416.3 822.7 406.0C827.0 395.7 829.7 382.0 833.8 372.0C837.8 362.0 844.7 351.3 847.1 346.0C849.6 340.7 848.5 341.9 848.5 340.0C848.6 338.1 848.7 336.3 847.3 334.4Z"/>
+      </svg>
+      <div class="hero-cap" aria-hidden="true"><span class="a">Marra fina</span><span class="b">Marra fina, alanbre bihurtua</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BEZEROA -->
+<section class="bz" id="bezeroa" aria-labelledby="h-bz">
+  <i class="rule" aria-hidden="true"></i>
+  <div class="wrap bz-in">
+    <div>
+      <p class="kick">Bezeroa</p>
+      <h2 id="h-bz">Karla <em>Jimenez</em></h2>
+    </div>
+    <div class="bz-text">
+      <p>Karla Jimenez lasaia da, eta alaia ere bai. Gertukoa eta atsegina da.</p>
+      <p>Ez du estilo markaturik, eta urrea erabiltzen du.</p>
+    </div>
+  </div>
+</section>
+
+<!-- KROKISAK -->
+<section class="kro" id="krokisak" aria-labelledby="h-kro">
+  <i class="rule" aria-hidden="true"></i>
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="kick">Krokisak</p><h2 id="h-kro">Hiru ideia, <em>norabide bat</em></h2></div>
+      <p>Paperean hasi nintzen. Lehenengo hitzak, gero hiru ideia oso orokor eta abstraktu. Hortik, bat aukeratu nuen.</p>
+    </div>
+    <div class="kro-words">
+      <figure><img src="img/krokis-hitzak.jpg" alt="Ideia-orriaren goiko aldea: Ideia, itsasoa, lasaitasuna, isiltasuna eta urrea hitzak, urrea borobilduta, eta atardecer naranja eta gogorra ohar gisa" loading="lazy"><figcaption class="cap">Ideia-orria. Lehen hitzak</figcaption></figure>
+      <div>
+        <p><b>1. urratsa: hitzak.</b> Orriaren ezkerrean <b>itsasoa</b> jarri nuen, eta berarekin <b>isiltasuna</b>. Eskuinean <b>lasaitasuna</b> eta <b>urrea</b>; urrea borobildu nuen, eta ondoan «atardecer naranja» eta «gogorra» idatzi nituen.</p>
+        <p><b>2. urratsa: marraztu.</b> Hitz bakoitzetik bide bat atera nuen. Bi paperean utzi nituen, eta hirugarrena, habia, gero etorri zen.</p>
+      </div>
+    </div>
+    <div class="ideas">
+      <article class="idea">
+        <div class="im"><img src="img/krokis-itsasoa.jpg" alt="Eskumuturreko zabal baten krokisa, eguzkia eta olatuak itsasoan, urre eta urdin koloreetan" loading="lazy"></div>
+        <div><div class="l">A ideia · Itsasoa</div><h3>Itsasoko eskumuturrekoa</h3>
+          <p>Itsasoaren lasaitasuna eta isiltasuna. Eguzkia itsasoan ezkutatzen da, eta eskumuturreko zabal bat marraztu nuen: olatuak, eguzkia eta itsasoko animaliak, urrezko markoarekin.</p>
+          <p><b>Zer hartu nuen:</b> lasaitasuna eta isiltasuna.</p></div>
+      </article>
+      <article class="idea">
+        <div class="im"><img src="img/krokis-urrea.jpg" alt="Urre-koloreko alanbrezko kiribilen krokisa, eraztun apaingarri gisa" loading="lazy"></div>
+        <div><div class="l">B ideia · Urrea</div><h3>Urrezko kiribila</h3>
+          <p>Urrea, eguzkiaren eta «atardecer naranja»ren kolorea. Alanbre bat espiral bihurtuta, eraztun apaingarri gisa.</p>
+          <p><b>Zer hartu nuen:</b> materiala eta kolorea: urre-koloreko alanbrea.</p></div>
+      </article>
+      <article class="idea win">
+        <div class="im">
+          <svg viewBox="0 0 260 230" role="img" aria-label="Habiaren ideiaren zirriborro sinplea: alanbre-ziri bihurriz egindako ontzia eta gainean arrautza bat"><ellipse cx="130" cy="104" rx="27" ry="35" fill="#ebeae5" stroke="#171613" stroke-width="1.6" transform="rotate(-12 130 104)"/><path d="M34 118C34 198 226 198 226 118C190 106 70 106 34 118Z" fill="#ebeae5" stroke="#a37c22" stroke-width="2.2" stroke-linejoin="round"/><g fill="none" stroke="#a37c22" stroke-width="2" stroke-linecap="round"><path d="M40 130C96 176 164 104 222 138"/><path d="M38 146C112 120 170 196 224 150" opacity=".85"/><path d="M52 164C108 146 152 190 210 164" opacity=".7"/><path d="M74 180C116 164 160 182 188 178" opacity=".55"/><path d="M60 122C90 150 120 118 150 146S196 120 214 126" opacity=".7"/></g></svg>
+        </div>
+        <div><div class="l">C ideia · Habia <span class="badge">AUKERATUA</span></div><h3>Hegaztiaren habia</h3>
+          <p>Hegazti baten etxea: babesa, lasaitasuna eta bere lekua. Alanbrea bihurritu, korapilatu eta biribiltzeko material egokia da, eta erdian arrautza bat jar daiteke.</p>
+          <p><b>Aukeratua:</b> hiru ideiak batzen ditu: itsasoaren lasaitasuna, urrearen kolorea eta istorio bat.</p></div>
+      </article>
+    </div>
+
+    <div class="pick-h">
+      <div><p class="kick">Nola aukeratu nuen</p><h3>Hiru ideia, <em>pieza bakarra</em></h3></div>
+      <p>Hiru ideiak alderatu nituen, eta bakoitzak zerbait eman zidan.</p>
+    </div>
+    <ol class="pick" style="margin:0;padding:0">
+      <li><span class="n">1</span><h4>Hitzak</h4><p>Itsasoa, isiltasuna, lasaitasuna, urrea.</p></li>
+      <li><span class="n">2</span><h4>Hiru bide</h4><p>Eskumuturrekoa, kiribila eta habia.</p></li>
+      <li><span class="n">3</span><h4>Zer hartu nuen</h4><p>Itsasotik lasaitasuna, urretik materiala.</p></li>
+      <li><span class="n">4</span><h4>Habia aukeratu</h4><p>Hiru ideiak batzen ditu: lasaitasuna, urrea eta istorio bat.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- GARAPENA -->
+<section class="ideia" id="garapena" aria-labelledby="h-gar">
+  <i class="rule" aria-hidden="true"></i>
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="kick">Idea baten garapena</p><h2 id="h-gar">Habiatik <em>alanbrera</em></h2></div>
+      <p>«Habia» hitz abstraktu bat zen. Hiru urratsetan objektu zehatz bihurtu nuen: zer den, hegazti bat gehituz, eta zein materialez egingo zen.</p>
+    </div>
+    <div class="chain" aria-label="Abstraktutik konkretura">
+      <span>Itsasoa + urrea</span><i>&rarr;</i><span>Habia</span><i>&rarr;</i><span>Eraztuna + usoa</span><i>&rarr;</i><span class="g">Urre-koloreko alanbrea</span>
+    </div>
+    <div class="split">
+      <div class="pin-stage">
+        <div class="stage" id="ideaStage">
+          <div class="layer on" data-l="0">
+            <div class="callout-stage"><div class="nest-in"><img src="img/eraztuna.png" alt="Eraztuna habia gisa: alanbre bihurtuzko korapiloa eta erdian arrautza den bolatxo zuria"><i class="pt" style="left:54%;top:60%"><span>Arrautza</span></i><i class="pt l" style="left:63%;top:30%"><span>Habia</span></i></div></div>
+            <div class="tag"><span class="chip g">Eraztuna</span><span class="chip">Korapiloa = habia</span><span class="chip">Bolatxo zuria = arrautza</span></div>
+          </div>
+          <div class="layer" data-l="1">
+            <svg viewBox="0 0 881 725" role="img" aria-label="Usoaren ibilbidea ainguratze-puntuekin eta kurba-heldulekuekin"><g id="l1g"></g></svg>
+            <div class="tag"><span class="chip g">Kontzeptuzko irudikapena</span><span class="chip">Kurbak eta aingura-puntuak</span></div>
+          </div>
+          <div class="layer" data-l="2">
+            <svg viewBox="0 0 881 725" role="img" aria-label="Usoaren azken forma proportzio-gidekin eta alboen erlazioarekin"><g id="l2g"></g><image class="ph" href="img/usoa.png" x="0" y="0" width="881" height="725"/></svg>
+            <div class="tag"><span class="chip g">Kontzeptuzko irudikapena</span><span class="chip" id="ratioChip">Zabalera : altuera</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="steps" id="steps">
+        <article class="step on" data-s="0"><span class="n">I</span><h3>Habia, hitzetik objektura</h3><p>Habia babesa eta etxea da. Objektu bihurtzeko alanbrea bihurritu eta korapilatu nuen, habiaren pilaketa bezala, eta erdian bolatxo zuri bat jarri nuen: arrautza. Zilarrezko espirala oinarri hartuta, eraztun bihurtu zen.</p></article>
+        <article class="step" data-s="1"><span class="n">II</span><h3>Hegaztia eta urrea</h3><p>Habiak hegazti bat behar du, eta usoa aukeratu nuen: lasaia da, eta silueta sinple batez marrazten da. Urrea B ideiatik dator: urre-koloreko alanbrea hartu nuen, eguzkiaren eta itsasoko ilunabarraren kolorea. Marraren ibilbidea puntuetan eta kurbatan zatitu nuen.</p></article>
+        <article class="step" data-s="2"><span class="n">III</span><h3>Azken forma eta proportzioak</h3><p>Hegalen irekiera, burua eta hanka orekatu nituen, forma ez zedin handiegia izan lepoan eramateko. Marra utzi, eta alanbrea gelditu zen.</p></article>
+      </div>
+    </div>
+    <p class="note">Hemen ikusten diren marrak diseinu-irudikapen artistikoak dira. Benetako fabrikazioa hurrengo atalean dago, zure grabaketekin.</p>
+  </div>
+</section>
+
+<!-- EKOIZPENA -->
+<section class="proc" id="ekoizpena" aria-labelledby="h-proc">
+  <i class="rule" aria-hidden="true"></i>
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="kick">Arte ekoizpena</p><h2 id="h-proc">Eskuak, pintzak <em>eta alanbrea</em></h2></div>
+      <p>Behin ideia zehaztuta, bi piezak fisikoki egiten hasi nintzen: usoa eta eraztuna. Hemen daude materialak, tresnak, grabaketa errealak eta azken argazkiak.</p>
+    </div>
+    <div class="mat">
+      <div><h3>Materialak</h3><ul>
+        <li><b>Urre-koloreko alanbrea</b><span>Usoaren silueta eta eraztunaren habia-korapiloa.</span></li>
+        <li><b>Zilarrezko espirala</b><span>Eraztunaren oinarria, alanbre fin bat inguruan bilduta.</span></li>
+        <li><b>Bolatxo zuria</b><span>Arrautza, habiaren erdian.</span></li>
+        <li><b>Zilarrezko eraztuntxoa eta zinta beltza</b><span>Usoa lepoan zintzilikatzeko.</span></li>
+        <li><b>Makil zuri txikia</b><span>Usoaren hankak makil baten gainean pausatzen dira.</span></li>
+      </ul></div>
+      <div><h3>Tresnak eta teknikak</h3><ul>
+        <li><b>Pintzak</b><span>Bi pintza: alanbrea tolestu eta lotzeko.</span></li>
+        <li><b>Tolestea</b><span>Usoaren silueta, kurba bakoitza eskuz.</span></li>
+        <li><b>Bihurritzea</b><span>Eraztunaren habiaren alanbre bihurriak.</span></li>
+        <li><b>Biltzea</b><span>Espirala eta hankaren lotura, alanbrea inguruan bilduta.</span></li>
+        <li><b>Lotzea</b><span>Eraztuntxoak piezak zintarekin elkartzen ditu.</span></li>
+      </ul></div>
+    </div>
+    <div class="sec-head" style="margin:clamp(56px,8vw,110px) 0 0"><div><h3 class="sub-h">Grabaketa errealak</h3></div><p>Edizio gabe, mahai gainean eta argi naturalean.</p></div>
+  </div>
+  <div class="strip-pin" id="strip" tabindex="0" aria-label="Prozesuaren bideo-bilduma, alboratu ezkerrera eta eskuinera">
+    <div class="track" id="track">
+      <svg class="wire-line" viewBox="0 0 2000 800" preserveAspectRatio="none" aria-hidden="true"><path id="trackWire" d="M0 420 C 200 120, 420 700, 700 380 S 1200 60, 1500 420 S 1800 640, 2000 330"/></svg>
+      <figure class="card"><div class="vid"><video muted loop playsinline preload="metadata" poster="img/p3927.jpg" aria-label="Alanbre fina eta bi pintza mahai zuri gainean"><source src="vid/p3927.mp4" type="video/mp4"></video></div><figcaption><span class="f">1 / 4 · Materiala</span><span class="t">Alanbrea eta pintzak</span><span class="s">Alanbre fina eta tresnak, lanerako prest.</span></figcaption></figure>
+      <figure class="card"><div class="vid"><video muted loop playsinline preload="metadata" poster="img/p3929.jpg" aria-label="Eraztuna esku batean, alanbre bihurtuzko korapiloarekin"><source src="vid/p3929.mp4" type="video/mp4"></video></div><figcaption><span class="f">2 / 4 · Eraztuna</span><span class="t">Eraztuna eskuan</span><span class="s">Alanbre bihurtuzko korapiloa eta zilarrezko espirala.</span></figcaption></figure>
+      <figure class="card"><div class="vid"><video muted loop playsinline preload="metadata" poster="img/p3954.jpg" aria-label="Usoaren alanbrezko pieza zinta beltzarekin mahai gainean"><source src="vid/p3954.mp4" type="video/mp4"></video></div><figcaption><span class="f">3 / 4 · Usoa</span><span class="t">Usoa, zintarekin</span><span class="s">Silueta osoa, zinta beltzetik zintzilik.</span></figcaption></figure>
+      <figure class="card"><div class="vid"><video muted loop playsinline preload="metadata" poster="img/p3957.jpg" aria-label="Bi piezak kotoi gainean, paperezko ontzi baten barruan"><source src="vid/p3957.mp4" type="video/mp4"></video></div><figcaption><span class="f">4 / 4 · Ontzia</span><span class="t">Kotoi gainean</span><span class="s">Bi piezak paperezko ontzi batean.</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="macros" id="macros">
+      <button class="mac" data-zoom="img/xehe-korapiloa.jpg" data-cap="Alanbre bihurtuzko korapiloa eta bolatxo zuria"><div class="im"><img src="img/xehe-korapiloa.jpg" alt="Eraztunaren korapiloa gertutik: alanbre bihurtua eta bolatxo zuria" loading="lazy"></div><span><b>Eraztuna</b>Korapiloa eta bolatxoa</span></button>
+      <button class="mac" data-zoom="img/xehe-espiralak.jpg" data-cap="Zilarrezko espiral-bandea"><div class="im"><img src="img/xehe-espiralak.jpg" alt="Eraztunaren zilarrezko espiral-bandea gertutik" loading="lazy"></div><span><b>Eraztuna</b>Zilarrezko espirala</span></button>
+      <button class="mac" data-zoom="img/xehe-lotura.jpg" data-cap="Zintarekin lotzen duen eraztuntxoa"><div class="im"><img src="img/xehe-lotura.jpg" alt="Usoaren goiko muturra zilarrezko eraztuntxoarekin eta zinta beltzarekin" loading="lazy"></div><span><b>Usoa</b>Lotura-puntua</span></button>
+      <button class="mac" data-zoom="img/xehe-hanka.jpg" data-cap="Hanka: alanbrea makil zuri baten inguruan bilduta"><div class="im"><img src="img/xehe-hanka.jpg" alt="Usoaren hanka alanbrez makil zuri baten inguruan bilduta" loading="lazy"></div><span><b>Usoa</b>Hanka</span></button>
+      <button class="mac" data-zoom="img/xehe-mokoa.jpg" data-cap="Mokoa eta buruaren kurba"><div class="im"><img src="img/xehe-mokoa.jpg" alt="Usoaren mokoa eta buruaren kurba gertutik" loading="lazy"></div><span><b>Usoa</b>Mokoa eta burua</span></button>
+    </div>
+    <div class="studio">
+      <h3 class="sub-h">Estudio-irudiak</h3>
+      <p class="sub-p">Piezen benetako argazkietatik moztuak, estudio-argiztapenarekin: atzeko plano garbia, argi leuna eta itzalak. Formak ez dira aldatu.</p>
+      <div class="studio-g" id="studio">
+        <button class="mac" data-zoom="img/studio-biak.jpg" data-cap="Usoa eta eraztuna, estudio-argiarekin"><div class="im"><img src="img/studio-biak.jpg" alt="Usoa eta eraztuna elkarrekin, atzeko plano argi garbi baten gainean" loading="lazy"></div><span><b>Biak</b>Usoa eta eraztuna</span></button>
+        <button class="mac" data-zoom="img/studio-usoa-argia.jpg" data-cap="Usoa, argi leunarekin"><div class="im"><img src="img/studio-usoa-argia.jpg" alt="Alanbrezko usoa atzeko plano argian eta itzal leunarekin" loading="lazy"></div><span><b>Usoa</b>Argi leuna</span></button>
+        <button class="mac" data-zoom="img/studio-usoa-iluna.jpg" data-cap="Usoa, atzeko plano ilunean"><div class="im"><img src="img/studio-usoa-iluna.jpg" alt="Alanbrezko usoa atzeko plano ilunean, urrearen distirarekin" loading="lazy"></div><span><b>Usoa</b>Atzeko plano iluna</span></button>
+        <button class="mac" data-zoom="img/studio-eraztuna-argia.jpg" data-cap="Eraztuna, argi leunarekin"><div class="im"><img src="img/studio-eraztuna-argia.jpg" alt="Eraztuna atzeko plano argian, habia-korapiloarekin eta bolatxo zuriarekin" loading="lazy"></div><span><b>Eraztuna</b>Argi leuna</span></button>
+        <button class="mac" data-zoom="img/studio-eraztuna-iluna.jpg" data-cap="Eraztuna, atzeko plano ilunean"><div class="im"><img src="img/studio-eraztuna-iluna.jpg" alt="Eraztuna atzeko plano ilunean" loading="lazy"></div><span><b>Eraztuna</b>Atzeko plano iluna</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="night" id="produktua" aria-labelledby="h-prod">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap night-in" id="prodScene">
+    <div>
+      <p class="kick" style="text-align:center" id="h-prod">Azken produktua</p>
+      <div class="prod" id="prod">
+        <div class="prod-t" id="prodT">
+          <img class="d" src="img/usoa.png" alt="Alanbrezko usoa, urre-koloreko alanbre bakarrezko silueta, atzeko plano ilunean" width="881" height="725">
+          <div class="shine" id="shine" aria-hidden="true"></div>
+          <button class="hot" style="left:67%;top:9%" data-zoom="img/xehe-lotura.jpg" data-cap="Lotura-puntua" aria-label="Zooma: lotura-puntua"><b aria-hidden="true">+</b><span>Lotura</span></button>
+          <button class="hot r" style="left:80%;top:87%" data-zoom="img/xehe-hanka.jpg" data-cap="Hanka" aria-label="Zooma: hanka"><b aria-hidden="true">+</b><span>Hanka</span></button>
+          <button class="hot" style="left:7%;top:53%" data-zoom="img/xehe-mokoa.jpg" data-cap="Mokoa eta burua" aria-label="Zooma: mokoa eta burua"><b aria-hidden="true">+</b><span>Mokoa</span></button>
+        </div>
+        <p class="say s1">Eskuz egina.</p><p class="say s2">Lerroa besterik ez.</p><p class="say s3">Distira, argiak ukitzen duen lekuan.</p>
+      </div>
+    </div>
+  </div>
+  <div class="wrap night-ring">
+    <img src="img/eraztuna.png" alt="Eraztuna: zilarrezko espiral-banda eta alanbre bihurtuzko korapiloa bolatxo zuriarekin" width="686" height="580" loading="lazy">
+    <div><p class="kick">Bigarren pieza</p><h2>Eraztuna</h2><p>Habia bat: zilarrezko espirala oinarri, alanbre bihurtuzko korapiloa habia, eta erdian bolatxo zuria, arrautza. Usoaren ondoan, hegaztiaren etxea.</p></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="end" id="informazioa" aria-labelledby="h-end">
+  <i class="rule" aria-hidden="true"></i>
+  <div class="wrap">
+    <div class="end-top">
+      <div class="pic"><img src="img/usoa.png" alt="Alanbrezko usoa, argi atzeko planoan" loading="lazy"></div>
+      <div><p class="kick">Amaiera</p><h2 class="quote" id="h-end">Forma bakoitzak <i>istorio</i> bat du.</h2></div>
+    </div>
+    <dl class="info" id="info">
+      <p class="edit-note">Eremu hauek editagarriak dira: egin klik eta idatzi. Zure nabigatzailean gordetzen dira.</p>
+      <div class="row"><dt>Piezaren izena</dt><dd contenteditable="true" spellcheck="false" data-k="izena" data-ph="Idatzi izena"></dd></div>
+      <div class="row"><dt>Diseinu-estudioa</dt><dd contenteditable="true" spellcheck="false" data-k="estudioa" data-ph="Idatzi estudioaren izena"></dd></div>
+      <div class="row"><dt>Materiala eta teknikak</dt><dd contenteditable="true" spellcheck="false" data-k="materiala" data-ph="Idatzi materiala eta teknikak"></dd><span class="obs">Irudietan ikusten dena: urre-koloreko alanbrea, zilarrezko espirala eta bolatxo zuria.</span></div>
+      <div class="row"><dt>Pieza bakarra edo seriekoa</dt><dd contenteditable="true" spellcheck="false" data-k="seria" data-ph="Pieza bakarra edo serie mugatua"></dd></div>
+      <div class="row"><dt>Diseinuaren kontzeptua</dt><dd contenteditable="true" spellcheck="false" data-k="kontzeptua">Itsasoa eta urrea: lasaitasuna eta isiltasuna alanbre fin batean.</dd></div>
+      <div class="row"><dt>Harremanetarako</dt><dd contenteditable="true" spellcheck="false" data-k="kontaktua" data-ph="Idatzi helbidea edo esteka"></dd></div>
+    </dl>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot"><span>Forma bakarra · eskuz egindako alanbrezko bitxiak</span><button class="mot" id="mot" aria-pressed="false">Mugimendua murriztu</button></div>
+</footer>
+
+<div class="zoom" id="zoom" data-lenis-prevent role="dialog" aria-modal="true" aria-label="Xehetasunaren zooma" hidden>
+  <div class="zbar"><p id="zcapT">Xehetasuna</p><div class="zbtns"><button id="zin" aria-label="Handitu">+</button><button id="zout" aria-label="Txikitu">&minus;</button><button id="zx" aria-label="Itxi">&times;</button></div></div>
+  <div class="zview" id="zview"><img id="zimg" alt=""></div>
+  <div class="zcap">Arrastatu mugitzeko. Gurpila edo + / − zoomerako. Esc ixteko.</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const NS='http://www.w3.org/2000/svg';
+const sysReduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let userReduce=false; try{userReduce=localStorage.getItem('fb-reduce')==='1'}catch(e){}
+let reduced=sysReduce||userReduce;let lenis=null;const bgEl=document.getElementById('bg');
+const D=$('#wire').getAttribute('d');
+const hasG=!!(window.gsap&&window.ScrollTrigger);
+if(hasG) gsap.registerPlugin(ScrollTrigger);
+function el(n,a,p){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+
+/* NAV */
+const nav=$('#nav'),links=$('#links'),burger=$('#burger');
+burger.addEventListener('click',()=>{const o=links.classList.toggle('open');burger.setAttribute('aria-expanded',o)});
+$$('[data-go]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=document.getElementById(a.dataset.go);links.classList.remove('open');burger.setAttribute('aria-expanded','false');if(t){const y=a.dataset.go==='hasiera'?0:t.getBoundingClientRect().top+window.scrollY-50;(lenis?lenis.scrollTo(y,{duration:1.5}):window.scrollTo({top:y,behavior:reduced?'auto':'smooth'}))}}));
+const prog=$('#prog');
+function onScroll(){const h=document.documentElement.scrollHeight-innerHeight;bgEl.style.setProperty('--sp',(reduced||h<=0)?0:Math.min(1,scrollY/h).toFixed(4));prog.style.transform='scaleX('+(h>0?Math.min(1,scrollY/h):0)+')';
+  const pr=$('#produktua').getBoundingClientRect();nav.classList.toggle('dark',pr.top<60&&pr.bottom>60);
+  let cur='hasiera';['hasiera','bezeroa','krokisak','garapena','ekoizpena','produktua','informazioa'].forEach(id=>{const r=document.getElementById(id).getBoundingClientRect();if(r.top<innerHeight*.4)cur=(id==='produktua'?'ekoizpena':id)});
+  $$('.links a').forEach(a=>a.classList.toggle('act',a.dataset.go===cur))}
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);onScroll();
+
+/* SVG HELPERS */
+function dashSet(p){const L=p.getTotalLength();p.style.strokeDasharray=L;p.style.strokeDashoffset=L;return L}
+/* Pencil sketch strokes */
+const pg=$('#pencils');
+[[2,-3,.4],[-3,2,-.5],[1,4,.2]].forEach((t,i)=>{const p=el('path',{class:'pencil',d:D,transform:`translate(${t[0]} ${t[1]}) rotate(${t[2]} 440 360)`},pg)});
+const pencils=$$('.pencil'),wire=$('#wire');
+
+/* IDEIA layers */
+const l1=$('#l1g'),l2=$('#l2g');
+const nums=D.match(/-?\d+\.?\d*/g).map(Number);
+const pts=[];for(let i=0;i<nums.length;i+=2)pts.push([nums[i],nums[i+1]]);
+const w1=el('path',{class:'w2',d:D},l1);
+for(let i=1;i+2<pts.length;i+=3){const a=pts[i-1],c1=pts[i],c2=pts[i+1],b=pts[i+2];
+  if((i-1)/3%2===0){el('line',{class:'hdl',x1:a[0],y1:a[1],x2:c1[0],y2:c1[1]},l1);el('line',{class:'hdl',x1:b[0],y1:b[1],x2:c2[0],y2:c2[1]},l1);
+    el('circle',{class:'ctrl',cx:c1[0],cy:c1[1],r:2.6},l1);el('circle',{class:'ctrl',cx:c2[0],cy:c2[1],r:2.6},l1)}}
+for(let i=0;i<pts.length;i+=3){if((i/3)%2===0)el('circle',{class:'node',cx:pts[i][0],cy:pts[i][1],r:5},l1)}
+const w2=el('path',{class:'w2',d:D,style:'stroke:var(--gold);stroke-width:2.6'},l2);
+const bb=w2.getBBox();
+const gx=bb.x,gy=bb.y,gw=bb.width,gh=bb.height;
+[1,2].forEach(k=>{el('line',{class:'guide',x1:gx+gw*k/3,y1:gy-10,x2:gx+gw*k/3,y2:gy+gh+10},l2);el('line',{class:'guide',x1:gx-10,y1:gy+gh*k/3,x2:gx+gw+10,y2:gy+gh*k/3},l2)});
+el('rect',{class:'guide',x:gx,y:gy,width:gw,height:gh,style:'stroke:var(--gold);stroke-dasharray:6 6'},l2);
+el('line',{class:'dim',x1:gx,y1:gy+gh+34,x2:gx+gw,y2:gy+gh+34},l2);
+el('line',{class:'dim',x1:gx,y1:gy+gh+26,x2:gx,y2:gy+gh+42},l2);el('line',{class:'dim',x1:gx+gw,y1:gy+gh+26,x2:gx+gw,y2:gy+gh+42},l2);
+const ratio=(gh/gw).toFixed(2).replace('.',',');
+$('#ratioChip').textContent='Zabalera 1 : altuera '+ratio;
+const t=el('text',{class:'dimt',x:gx+gw/2,y:gy+gh+30,'text-anchor':'middle'},l2);t.textContent='1 : '+ratio;
+t.setAttribute('dy','-8');
+const dashed=[w1,w2];dashed.forEach(p=>{const L=dashSet(p);p.dataset.len=L});
+/* wire in ideia 2/3 draws when its layer turns on */
+const layers=$$('.layer'),steps=$$('.step');
+function setStep(i){layers.forEach((l,k)=>{const on=k===i;l.classList.toggle('on',on)});steps.forEach((s,k)=>s.classList.toggle('on',k===i));
+  if(i===1)w1.style.strokeDashoffset=0; if(i===2)w2.style.strokeDashoffset=0;}
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)setStep(+e.target.dataset.s)})},{rootMargin:'-42% 0px -42% 0px'});
+steps.forEach(s=>io.observe(s));
+
+/* ZOOM VIEWER */
+const Z=$('#zoom'),zimg=$('#zimg'),zview=$('#zview');let sc=1,tx=0,ty=0,lastFocus=null;
+function zApply(){zimg.style.transform=`translate(-50%,-50%) translate(${tx}px,${ty}px) scale(${sc})`}
+function zOpen(src,cap,from){lastFocus=from;zimg.src=src;zimg.alt=cap;$('#zcapT').textContent=cap;sc=1;tx=ty=0;zApply();Z.hidden=false;document.body.style.overflow='hidden';$('#zx').focus()}
+function zClose(){Z.hidden=true;document.body.style.overflow='';if(lastFocus)lastFocus.focus()}
+function zSet(s){sc=Math.max(1,Math.min(5,s));if(sc===1){tx=ty=0}zApply()}
+$$('[data-zoom]').forEach(b=>b.addEventListener('click',()=>zOpen(b.dataset.zoom,b.dataset.cap,b)));
+$('#zx').addEventListener('click',zClose);$('#zin').addEventListener('click',()=>zSet(sc*1.4));$('#zout').addEventListener('click',()=>zSet(sc/1.4));
+zview.addEventListener('wheel',e=>{e.preventDefault();zSet(sc*(e.deltaY<0?1.15:1/1.15))},{passive:false});
+zview.addEventListener('dblclick',()=>zSet(sc>1?1:2.4));
+let drag=null;zview.addEventListener('pointerdown',e=>{drag={x:e.clientX-tx,y:e.clientY-ty};zview.setPointerCapture(e.pointerId)});
+zview.addEventListener('pointermove',e=>{if(drag&&sc>1){tx=e.clientX-drag.x;ty=e.clientY-drag.y;zApply()}});
+zview.addEventListener('pointerup',()=>drag=null);
+addEventListener('keydown',e=>{if(Z.hidden)return;if(e.key==='Escape')zClose();else if(e.key==='+'||e.key==='=')zSet(sc*1.4);else if(e.key==='-')zSet(sc/1.4);else if(e.key==='ArrowLeft'){tx+=40;zApply()}else if(e.key==='ArrowRight'){tx-=40;zApply()}else if(e.key==='ArrowUp'){ty+=40;zApply()}else if(e.key==='ArrowDown'){ty-=40;zApply()}else if(e.key==='Tab'){const f=$$('button',Z);const i=f.indexOf(document.activeElement);e.preventDefault();f[(i+(e.shiftKey?-1:1)+f.length)%f.length].focus()}});
+
+/* VIDEOS */
+const vids=$$('video');
+const vio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting&&!reduced){v.play().catch(()=>{})}else v.pause()}),{threshold:.35});
+vids.forEach(v=>vio.observe(v));
+
+/* EDITABLE INFO */
+$$('#info dd').forEach(d=>{const k='fb-'+d.dataset.k;try{const v=localStorage.getItem(k);if(v!==null)d.textContent=v}catch(e){}
+  d.addEventListener('input',()=>{try{localStorage.setItem(k,d.textContent)}catch(e){}});
+  d.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();d.blur()}})});
+
+/* MOTION TOGGLE */
+const mot=$('#mot');
+function setMotionUI(){document.documentElement.classList.toggle('rm',reduced);mot.setAttribute('aria-pressed',reduced);mot.textContent=reduced?'Mugimendua murriztuta (aktibatu)':'Mugimendua murriztu';
+  vids.forEach(v=>{if(reduced){v.pause();v.controls=true}else{v.controls=false}})}
+mot.addEventListener('click',()=>{userReduce=!userReduce;try{localStorage.setItem('fb-reduce',userReduce?'1':'0')}catch(e){};reduced=sysReduce||userReduce;setMotionUI();build()});
+
+/* ANIMATIONS */
+let ctx=null,lastDesk=null;function lenisTick(t){if(lenis)lenis.raf(t*1000)}
+const shine=$('#shine'),prodT=$('#prodT'),prod=$('#prod');
+function pointer(e){if(reduced)return;const r=prod.getBoundingClientRect();const px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+  prodT.style.transform=`rotateY(${px*8}deg) rotateX(${-py*6}deg)`;shine.style.setProperty('--sx',(100-(px+.5)*100)+'%')}
+prod.addEventListener('pointermove',pointer);prod.addEventListener('pointerleave',()=>{prodT.style.transform=''});
+
+function build(){
+  if(ctx){ctx.revert();ctx=null}
+  if(lenis&&(reduced||innerWidth<900)){lenis.destroy();lenis=null;if(hasG)gsap.ticker.remove(lenisTick)}
+  if(!lenis&&!reduced&&hasG&&window.Lenis&&innerWidth>=900&&matchMedia('(pointer:fine)').matches){try{lenis=new Lenis({lerp:.09,wheelMultiplier:.9});lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(lenisTick);gsap.ticker.lagSmoothing(0)}catch(e){lenis=null}}
+  /* reset resting state */
+  wire.style.strokeDasharray='';wire.style.strokeDashoffset='';pencils.forEach(p=>{p.style.strokeDasharray='';p.style.strokeDashoffset=''});
+  $('#heroPhoto').style.opacity=reduced?'1':'';
+  if(reduced){wire.style.strokeWidth='1.4';wire.style.opacity='.6';$('.hero-cap .a').style.opacity=0;$('.hero-cap .b').style.opacity=1;
+    shine.style.setProperty('--sx','35%');$('#prodScene').style.background='';$('#produktua').style.backgroundColor='';return}
+  wire.style.strokeWidth='';wire.style.opacity='';$('.hero-cap .a').style.opacity='';$('.hero-cap .b').style.opacity='';
+  if(!hasG){$('#heroPhoto').style.opacity='1';wire.style.strokeWidth='1.4';return}
+  const desk=innerWidth>=900;lastDesk=desk;
+  ctx=gsap.context(()=>{
+    /* hero draw on load */
+    const L=dashSet(wire);pencils.forEach(dashSet);
+    gsap.to(pencils,{strokeDashoffset:0,duration:2.8,ease:'power2.inOut',stagger:.25});
+    gsap.to(wire,{strokeDashoffset:0,duration:3.4,ease:'power2.inOut',delay:.5,onComplete:()=>{wire.style.strokeDasharray='none'}});
+    gsap.from('.hero h1 .ln span',{yPercent:110,duration:1.1,ease:'power3.out',stagger:.14,delay:.15});
+    gsap.from('.hero-sub,.hint,.hero .kick',{opacity:0,y:16,duration:1,delay:.9,stagger:.12});
+    const tl=gsap.timeline({defaults:{ease:'none'}});
+    tl.to('#heroPhoto',{opacity:1,duration:.5},.15).to(wire,{strokeWidth:1.2,opacity:.45,duration:.6},0).to(pencils,{opacity:0,duration:.4},0)
+      .to('.hero-cap .a',{opacity:0,duration:.2},.2).to('.hero-cap .b',{opacity:1,duration:.2},.4).to('#heroSvg',{scale:1.04,transformOrigin:'50% 50%',duration:1},0);
+    ScrollTrigger.create({trigger:desk?'#hasiera':'#heroStage',start:desk?'top top':'top 70%',end:desk?'+=95%':'bottom 35%',pin:desk,scrub:.7,animation:tl,anticipatePin:1});
+    /* process strip */
+    const tw=$('#trackWire');const Lw=dashSet(tw);
+    const strip=$('#strip'),track=$('#track');
+    if(desk){
+      const dist=()=>Math.max(0,track.scrollWidth-innerWidth);
+      gsap.to(track,{x:()=>-dist(),ease:'none',scrollTrigger:{trigger:strip,start:'top 12%',end:()=>'+='+dist(),pin:true,scrub:.6,invalidateOnRefresh:true,anticipatePin:1}});
+      gsap.to(tw,{strokeDashoffset:0,ease:'none',scrollTrigger:{trigger:strip,start:'top 12%',end:()=>'+='+dist(),scrub:.6,invalidateOnRefresh:true}});
+      gsap.utils.toArray('.card .vid').forEach((v,i)=>gsap.fromTo(v,{yPercent:6},{yPercent:-6,ease:'none',scrollTrigger:{trigger:strip,start:'top 12%',end:()=>'+='+dist(),scrub:1}}));
+    }else{tw.style.strokeDashoffset=0}
+    gsap.from('.mac',{opacity:0,y:30,duration:.9,stagger:.1,scrollTrigger:{trigger:'#macros',start:'top 85%'}});
+    /* night: bg light -> dark */
+    const nt=$('#produktua');
+    gsap.fromTo(nt,{backgroundColor:'#ebeae5'},{backgroundColor:'#0e0d0b',ease:'none',scrollTrigger:{trigger:nt,start:'top 85%',end:'top 15%',scrub:true}});
+    gsap.fromTo('.night .glow',{opacity:0},{opacity:1,ease:'none',scrollTrigger:{trigger:nt,start:'top 60%',end:'top 0%',scrub:true}});
+    gsap.fromTo('#prodT',{opacity:0,scale:.92},{opacity:1,scale:1,ease:'none',scrollTrigger:{trigger:nt,start:'top 55%',end:'top 5%',scrub:.6}});
+    gsap.fromTo(shine,{'--sx':'100%'},{'--sx':'-10%',ease:'none',scrollTrigger:{trigger:'#prodScene',start:'top 40%',end:'bottom 20%',scrub:1}});
+    if(desk)gsap.from('.say',{opacity:0,y:14,duration:1,stagger:.3,scrollTrigger:{trigger:'#prod',start:'top 50%'}});
+    gsap.from('.night-ring img',{opacity:0,y:40,duration:1.1,scrollTrigger:{trigger:'.night-ring',start:'top 75%'}});
+    gsap.from('.quote',{opacity:0,y:30,duration:1.1,scrollTrigger:{trigger:'.end-top',start:'top 75%'}});
+    gsap.from('.row',{opacity:0,y:20,duration:.8,stagger:.08,scrollTrigger:{trigger:'#info',start:'top 85%'}});
+    if(desk){
+      gsap.utils.toArray('.rule').forEach(r=>gsap.fromTo(r,{scaleX:0},{scaleX:1,ease:'none',scrollTrigger:{trigger:r.parentElement,start:'top 92%',end:'top 35%',scrub:true}}));
+      gsap.utils.toArray('.sec-head h2, .bz h2').forEach(h=>gsap.from(h,{clipPath:'inset(0 0 100% 0)',yPercent:35,duration:1.3,ease:'power3.out',clearProps:'clipPath,transform',scrollTrigger:{trigger:h,start:'top 86%'}}));
+      gsap.utils.toArray('.idea .im, .kro-words figure').forEach(el=>gsap.fromTo(el,{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)',duration:1.4,ease:'power3.inOut',clearProps:'clipPath',scrollTrigger:{trigger:el,start:'top 88%'}}));
+      gsap.to('.bz h2',{yPercent:-10,ease:'none',scrollTrigger:{trigger:'.bz',start:'top bottom',end:'bottom top',scrub:true}});
+      gsap.to('.kro-words img',{yPercent:-6,ease:'none',scrollTrigger:{trigger:'.kro-words',start:'top bottom',end:'bottom top',scrub:true}});
+      gsap.utils.toArray('.mat li').forEach((li,i)=>gsap.from(li,{opacity:0,x:-24,duration:.8,scrollTrigger:{trigger:li,start:'top 92%'}}));
+      if(innerHeight>=820){
+        const cards=gsap.utils.toArray('.idea');
+        cards.forEach((c,i)=>{if(i)gsap.set(c,{opacity:.1,y:70})});
+        const t2=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:'.ideas',start:'top 13%',end:'+=140%',pin:true,scrub:.6,anticipatePin:1}});
+        t2.to(cards[0],{opacity:.45,duration:1},1).to(cards[1],{opacity:1,y:0,duration:1},1)
+          .to(cards[1],{opacity:.45,duration:1},2).to(cards[2],{opacity:1,y:0,duration:1},2).to({},{duration:.7},3);
+      }
+    }
+  });
+}
+setMotionUI();build();
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{const d=innerWidth>=900;if(d!==lastDesk&&!reduced)build();else if(hasG)ScrollTrigger.refresh()},250)});
+addEventListener('load',()=>{if(hasG)ScrollTrigger.refresh()});
+})();
+</script>
